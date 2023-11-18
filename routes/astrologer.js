@@ -6,8 +6,10 @@ const {
   deleteAstrologer,
   updateAstrologer,
   activeAstrologer,
+
   getAstrologer,
 } = require("../controllers/astrologerController");
+
 const multer = require("multer");
 const router = express.Router();
 const path = require("path");
@@ -39,8 +41,11 @@ router.route("/astrologer/register").post(
   registerAstrologer
 );
 router.route("/astrologer/allAstrologers").get(getAllAstrologers);
+
 router.route("/astrologer/getAstrologer/:id").get(getAstrologer);
 router.route("/astrologer/delete/:id").delete(deleteAstrologer);
-router.route("/astrologer/update/:id").put(updateAstrologer);
+router.route("/astrologer/update/:id").put(
+  upload.fields([{ name: "certificates" }, { name: "profilePic" }]),
+  updateAstrologer);
 router.route("/astrologer/state/:id").put(activeAstrologer);
 module.exports = router;
