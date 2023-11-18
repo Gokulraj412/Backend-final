@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express();
+const errorMiddleware = require('./middlewares/error.js')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const dotenv =require('dotenv')
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended:true}))
 
+app.use('/uploads', express.static(path.join(__dirname,'uploads') ) )
+
 const user = require('./routes/User')
 const astrologer = require('./routes/astrologer')
 const admin = require('./routes/Admin')
@@ -19,5 +22,5 @@ app.use('/api/v1',user)
 app.use('/api/v1',astrologer)
 app.use('/api/v1',admin);
 
-
+app.use(errorMiddleware)
 module.exports = app

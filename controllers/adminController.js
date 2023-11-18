@@ -1,5 +1,6 @@
 const catchAsyncError = require('../middlewares/catchAsyncError')
 const Admin = require('../models/adminModel')
+const ErrorHandler=require('../utils/errorHandler')
 
 //registerAdmin  -  {{base_url}}/api/v1/admin/register
 exports.registerAdmin= catchAsyncError(async (req, res, next)=>{
