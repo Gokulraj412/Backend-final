@@ -11,15 +11,15 @@ exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
   }
   try {
     let certificateUrls = []
-    req?.files?.certificates?.forEach(element => {
-      let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
-      certificateUrls.push({ file: astrologerUrl });
+    //req?.files?.certificates?.forEach(element => {
+      //let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
+     // certificateUrls.push({ file: astrologerUrl });
 
-    });
+    //});
 
     let picUrls = [];
-    let imagesUrl = `${BASE_URL}/uploads/profilepic/${req.files.profilePic[0].originalname}`;
-    picUrls.push({ pic: imagesUrl });
+   // let imagesUrl = `${BASE_URL}/uploads/profilepic/${req.files.profilePic[0].originalname}`;
+    //picUrls.push({ pic: imagesUrl });
 
     req.body.certificates = certificateUrls;
     req.body.profilePic = picUrls;
@@ -117,7 +117,6 @@ exports.updateAstrologer = catchAsyncError(async (req, res, next) => {
     experience,
     course,
     institute,
-    certificates,
     astrologyDescription,
     astrologyExperience,
     astrologyExpertise,
