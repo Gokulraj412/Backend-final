@@ -11,15 +11,15 @@ exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
   }
   try {
     let certificateUrls = []
-    // req?.files?.certificates?.forEach(element => {
-    //   let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
-    //   certificateUrls.push({ file: astrologerUrl });
+    req?.files?.certificates?.forEach(element => {
+      let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
+      certificateUrls.push({ file: astrologerUrl });
 
-    // });
+    });
 
     let picUrls = [];
-    // let imagesUrl = `${BASE_URL}/uploads/profilepic/${req.files.profilePic[0].originalname}`;
-    // picUrls.push({ pic: imagesUrl });
+    let imagesUrl = `${BASE_URL}/uploads/profilepic/${req.files.profilePic[0].originalname}`;
+    picUrls.push({ pic: imagesUrl });
 
     req.body.certificates = certificateUrls;
     req.body.profilePic = picUrls;
@@ -137,7 +137,7 @@ exports.updateAstrologer = catchAsyncError(async (req, res, next) => {
     }
   );
   console.log("astrologer", astrologer);
-  console.log("id",req.params.id);
+  console.log("id", req.params.id);
   res.status(200).json({
     success: true,
     astrologer,
@@ -203,3 +203,27 @@ exports.activeAstrologer = catchAsyncError(async (req, res, next) => {
     activeAstrologer,
   });
 });
+
+
+exports.getAstrologerPhone = async (req, res, next) => {
+
+  try {
+    let buildQuery = () => {
+      return new APIFeatures(Astrologer.find(), req.query).search().filter()
+    }
+
+    const astrologer = await buildQuery().query;
+
+
+    res.status(200).json({
+      success: true,
+      astrologer,
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+};
