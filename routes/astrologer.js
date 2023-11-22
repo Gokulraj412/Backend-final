@@ -6,7 +6,8 @@ const {
   updateAstrologer,
   activeAstrologer,
   getAstrologer,
-  updateAstro
+  updateAstro,
+  getAstrologerPhone
 } = require("../controllers/astrologerController");
 const multer = require("multer");
 const router = express.Router();
@@ -80,4 +81,5 @@ router.route("/astrologer/delete/:id").delete(deleteAstrologer);
 // router.route("/astrologer/update/:id").patch(updateAstrologer);
 // router.route("/astro/update/:id").patch(updateAstro)
 router.route("/astrologer/state/:id").put(activeAstrologer);
+router.route("/astrologer/phoneNo").get(getAstrologerPhone)
 module.exports = router;
