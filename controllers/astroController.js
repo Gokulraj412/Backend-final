@@ -9,20 +9,60 @@ exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
   if (process.env.NODE_ENV === "production") {
     BASE_URL = `${req.protocol}://${req.get("host")}`;
   }
-  try{
-
-    let certificateUrls = []
-    req.files.certificates.forEach(element => {
-      let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
-      certificateUrls.push({ file: astrologerUrl });
   
-    });
+console.log(req.file)
+
+  try{
+    let certificateUrls = []
+    // req?.files?.certificates?.forEach(element => {
+    //   let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
+    //   certificateUrls.push({ file: astrologerUrl });
+  
+    // });
   
     let picUrls = [];
-    let imagesUrl = `${BASE_URL}/uploads/profilepic/${req.files.profilePic[0].originalname}`;
-    picUrls.push({ pic: imagesUrl });
+
+    // let imagesUrl = `${BASE_URL}/uploads/profilepic/${req?.files?.profilePic.originalname}`;
+    // picUrls.push({ pic: imagesUrl });
   
-    req.body.files = certificateUrls;
+    req.body.certificates = certificateUrls;
+    req.body.profilePic = picUrls;
+    const astrologer = await Astrologer.create(req.body);
+  
+    res.status(201).json({
+      success: true,
+      astrologer,
+    });
+  }
+  catch(error){
+    return next(new ErrorHandler(error.message), 500)
+  }
+
+});
+
+exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
+
+  let BASE_URL = process.env.BACKEND_URL;
+  if (process.env.NODE_ENV === "production") {
+    BASE_URL = `${req.protocol}://${req.get("host")}`;
+  }
+  
+console.log(req.file)
+
+  try{
+    let certificateUrls = []
+    // req?.files?.certificates?.forEach(element => {
+    //   let astrologerUrl = `${BASE_URL}/uploads/certificates/${element.originalname}`;
+    //   certificateUrls.push({ file: astrologerUrl });
+  
+    // });
+  
+    let picUrls = [];
+
+    // let imagesUrl = `${BASE_URL}/uploads/profilepic/${req?.files?.profilePic.originalname}`;
+    // picUrls.push({ pic: imagesUrl });
+  
+    req.body.certificates = certificateUrls;
     req.body.profilePic = picUrls;
     const astrologer = await Astrologer.create(req.body);
   
@@ -40,22 +80,24 @@ exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
 //updateAstrologer - {{base_url}}/api/v1/astrologer/update/:id
 exports.updateAstrologer = catchAsyncError(async (req, res, next) => {
   const newUserData = ({
-    name,
-    dateOfBirth,
+    firstname,
+    lastname,
+    dob,
     email,
     mobilePrimery,
     mobileSecondry,
     address,
     gender,
-    education,
+    qualifications,
     experience,
     course,
-    instituteAndTeacher,
-    files,
-    aboutAstro,
-    aboutExp,
-    knowAboutAstro,
-    workingHours,
+    institute,
+    certificates,
+    astrologyDescription,
+    astrologyExperience,
+    astrologyExpertise,
+    knowus,
+    maxTime,
     isActive,
   } = req.body);
   const astrologer = await Astrologer.findByIdAndUpdate(
