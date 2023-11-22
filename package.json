@@ -7,7 +7,7 @@
     "gitignore": "^0.7.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.2.0",
-    "mongoose": "^8.0.0",
+    "mongoose": "^8.0.1",
     "multer": "^1.4.5-lts.1",
     "nanoid": "^5.0.3",
     "validator": "^13.11.0"
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "dev": "set NODE_ENV=development&&nodemon server.js",
     "prod": "set NODE_ENV=production&&nodemon server.js"
   },
@@ -26,5 +26,6 @@
   "description": "astrology",
   "main": "server.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "type": "commonjs"
 }
