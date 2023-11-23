@@ -1,6 +1,7 @@
 const ErrorHandler = require('../utils/errorHandler')
 const catchAsyncError = require("../middlewares/catchAsyncError");
 const Astrologer = require("../models/astrologerModel");
+const APIFeatures   = require("../utils/apiFeatures.js");
 
 //registerAstrologer - {{base_url}}/api/v1/astrologer/register
 exports.registerAstrologer = catchAsyncError(async (req, res, next) => {
