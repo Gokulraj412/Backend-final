@@ -27,9 +27,9 @@ exports.registerUser = async (req, res, next) => {
     const user = await User.create(req.body);
     console.log(req.body);
     const date = new Date().toString()
-    user.loginTime = date
+    user.registerTime = date
     user.save()
-    
+
     res.status(200).json({
       success: true,
       user,
