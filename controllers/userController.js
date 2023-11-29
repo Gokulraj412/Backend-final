@@ -1,8 +1,8 @@
 const catchAsyncError = require('../middlewares/catchAsyncError')
-const User = require('../models/userModel')
+const Client = require('../models/clientModel')
 const APIFeatures = require("../utils/apiFeatures")
 // const requestIp = require('request-ip')
-// register user -  {{base_url}}/api/v1/user/register
+// register Client-  {{base_url}}/api/v1/user/register
 
 exports.registerUser = async (req, res, next) => {
   try {
@@ -12,19 +12,20 @@ exports.registerUser = async (req, res, next) => {
       BASE_URL = `${req.protocol}://${req.get('host')}`;
     }
 
-    // Check if the user already exists
-    const existingUser = await User.findOne({ phoneNo: req.body.phoneNo });
+    // Check if the Clientalready exists
+    const existingUser = await  Client.findOne({ phoneNo: req.body.phoneNo });
 
     if (existingUser) {
-      // User is already registered
+      // Clientis already registered
       return res.status(409).json({
         success: false,
-        message: 'User already registered',
+        message: 'Client already registered',
       });
     }
 
-    // If user doesn't exist, create a new user
-    const user = await User.create(req.body);
+
+    // If Clientdoesn't exist, create a new user
+    const user= await Client.create(req.body);
     console.log(req.body);
     const date = new Date().toString()
     user.registerTime = date
@@ -90,7 +91,7 @@ exports.loginUser = async (req, res, next) => {
     }
 
     // Finding the user in the database
-    const user = await User.findOne({ phoneNo });
+    const user = await Client.findOne({ phoneNo });
     const date = new Date().toString()
     user.loginTime = date
     user.save()
@@ -141,7 +142,7 @@ exports.loginUser = async (req, res, next) => {
   }
 };
 exports.getUser = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const user = await  Client.findById(req.params.id);
   if (!user) {
     return next(
       new ErrorHandler(`User not found with this id ${req.params.id}`)
@@ -159,7 +160,7 @@ exports.getUser = catchAsyncError(async (req, res, next) => {
 // getAlluser -  {{base_url}}/api/v1/user/users
 
 exports.getAllUser = catchAsyncError(async(req,res,next)=>{
-    const users = await User.find();
+    const users = await Client.find();
     res.status(200).json({
       success:true,
       users
@@ -173,7 +174,7 @@ exports.getAllUser = catchAsyncError(async(req,res,next)=>{
       email: req.body.email,
     //   role: req.body.role
     }
-     const user = await User.findByIdAndUpdate(req.params.id,newUserData,{
+     const user = await Client.findByIdAndUpdate(req.params.id,newUserData,{
       new:true,
       runValidators: true,
     })
@@ -187,7 +188,7 @@ exports.getAllUser = catchAsyncError(async(req,res,next)=>{
 // deleteuser -  {{base_url}}/api/v1/user/delete/:id
 
   exports.deleteUser = catchAsyncError(async (req, res, next) => {
-    const user = await User.findById(req.params.id);
+    const user = await  Client.findById(req.params.id);
     if(!user) {
         return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
     }
