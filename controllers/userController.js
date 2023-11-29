@@ -1,5 +1,5 @@
 const catchAsyncError = require('../middlewares/catchAsyncError')
-const UserDetail = require('../models/UserDetail')
+const User = require('../models/userModel')
 const APIFeatures = require("../utils/apiFeatures")
 // const requestIp = require('request-ip')
 // register user -  {{base_url}}/api/v1/user/register
@@ -13,7 +13,7 @@ exports.registerUser = async (req, res, next) => {
     }
 
     // Check if the user already exists
-    const existingUser = await UserDetail.findOne({ phoneNo: req.body.phoneNo });
+    const existingUser = await User.findOne({ phoneNo: req.body.phoneNo });
 
     if (existingUser) {
       // User is already registered
@@ -24,9 +24,12 @@ exports.registerUser = async (req, res, next) => {
     }
 
     // If user doesn't exist, create a new user
-    const user = await UserDetail.create(req.body);
+    const user = await User.create(req.body);
     console.log(req.body);
-
+    const date = new Date().toString()
+    user.loginTime = date
+    user.save()
+    
     res.status(200).json({
       success: true,
       user,
@@ -56,7 +59,7 @@ exports.logoutUser = (req, res, next) =>{
   
 //   try {
 //     let buildQuery = () => {
-//       return new APIFeatures(UserDetail.find(), req.query).search().filter()
+//       return new APIFeatures(User.find(), req.query).search().filter()
 //   }
   
 //   const user = await buildQuery().query;
@@ -87,8 +90,10 @@ exports.loginUser = async (req, res, next) => {
     }
 
     // Finding the user in the database
-    const user = await UserDetail.findOne({ phoneNo });
-
+    const user = await User.findOne({ phoneNo });
+    const date = new Date().toString()
+    user.loginTime = date
+    user.save()
     // const ipAddress = req.header('x-forwarded-for') ||
     //  req.socket.remoteAddress;
     // //  res.send(ipAddress);
@@ -135,13 +140,26 @@ exports.loginUser = async (req, res, next) => {
     }
   }
 };
+exports.getUser = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(
+      new ErrorHandler(`User not found with this id ${req.params.id}`)
+    );
+  }
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
 
 
 
 // getAlluser -  {{base_url}}/api/v1/user/users
 
 exports.getAllUser = catchAsyncError(async(req,res,next)=>{
-    const users = await UserDetail.find();
+    const users = await User.find();
     res.status(200).json({
       success:true,
       users
@@ -155,7 +173,7 @@ exports.getAllUser = catchAsyncError(async(req,res,next)=>{
       email: req.body.email,
     //   role: req.body.role
     }
-     const user = await UserDetail.findByIdAndUpdate(req.params.id,newUserData,{
+     const user = await User.findByIdAndUpdate(req.params.id,newUserData,{
       new:true,
       runValidators: true,
     })
@@ -169,7 +187,7 @@ exports.getAllUser = catchAsyncError(async(req,res,next)=>{
 // deleteuser -  {{base_url}}/api/v1/user/delete/:id
 
   exports.deleteUser = catchAsyncError(async (req, res, next) => {
-    const user = await UserDetail.findById(req.params.id);
+    const user = await User.findById(req.params.id);
     if(!user) {
         return next(new ErrorHandler(`User not found with this id ${req.params.id}`))
     }
