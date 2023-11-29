@@ -1,7 +1,7 @@
 const catchAsyncError = require('../middlewares/catchAsyncError')
 const UserDetail = require('../models/UserDetail')
 const APIFeatures = require("../utils/apiFeatures")
-
+// const requestIp = require('request-ip')
 // register user -  {{base_url}}/api/v1/user/register
 
 exports.registerUser = async (req, res, next) => {
@@ -40,7 +40,16 @@ exports.registerUser = async (req, res, next) => {
   }
 };
 
-
+exports.logoutUser = (req, res, next) =>{
+  res.cookie('token', null,{
+    expires: new Date(Date.now()),
+    httpOnly:true
+  }).status(200)
+      .json({
+        success:true,
+        message:"Logedout"
+      })
+}
 
 
 // exports.getUserPhone = async (req, res, next) => {
@@ -80,6 +89,13 @@ exports.loginUser = async (req, res, next) => {
     // Finding the user in the database
     const user = await UserDetail.findOne({ phoneNo });
 
+    // const ipAddress = req.header('x-forwarded-for') ||
+    //  req.socket.remoteAddress;
+    // //  res.send(ipAddress);
+    // console.log(ipAddress);
+
+    const clientIp = req.clientIp;
+    console.log(clientIp);
     if (!user) {
       res.status(404).json({
         success: false,
