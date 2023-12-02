@@ -1,6 +1,6 @@
-const sendToken = (admin, statusCode, res) => {
+const sendUserToken = (user, statusCode, res) => {
     // Creating JWT Token
-    const token = admin.getJwtToken();
+    const token = user.getJwtToken();
 
     // Setting cookies
     const options = {
@@ -15,14 +15,11 @@ const sendToken = (admin, statusCode, res) => {
         .json({
             success: true,
             token,
-            admin: {
-                email: admin.email, 
-                token:token/// Adjust this based on your admin object structure
-                // Other admin properties if needed
+            user: {
+                phoneNo:user.phoneNo, // Adjust this based on your admin object structure
+                token:token// Other admin properties if needed
             },
         });
 };
 
-module.exports = sendToken;
-
-
+module.exports = sendUserToken;
