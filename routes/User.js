@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer')
-const {registerUser, getAllUser, updateUser, deleteUser, loginUser, getUserPhone, getUser} = require('../controllers/userController')
+const {registerUser, getAllUser, updateUser, deleteUser, loginUser, getUserPhone, getUser, userCall, logoutUser} = require('../controllers/userController')
 const router = express.Router();
 
 const upload = multer({storage:multer.diskStorage({
@@ -16,9 +16,11 @@ const upload = multer({storage:multer.diskStorage({
 router.route('/user/register').post(registerUser)
 router.route('/user/login').post(loginUser)
 router.route('/user/getuser/:id').get(getUser)
-
+router.route('/user/logout').get(logoutUser)
 // router.route("/user/phoneNo").get(getUserPhone)
 router.route('/user/users').get(getAllUser)
+router.route('/user/callDuration').post(userCall)
+
 router.route('/user/update/:id').patch(updateUser)
 router.route('/user/delete/:id').delete(deleteUser)
 module.exports = router;
