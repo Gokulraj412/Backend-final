@@ -3,7 +3,7 @@ const Client = require('../models/clientModel')
 const APIFeatures = require("../utils/apiFeatures")
 // const requestIp = require('request-ip')
 // register Client-  {{base_url}}/api/v1/user/register
-
+const  sendUserToken = require('../utils/userJwt')
 exports.registerUser = async (req, res, next) => {
   try {
     let BASE_URL = process.env.BACKEND_URL;
@@ -31,10 +31,7 @@ exports.registerUser = async (req, res, next) => {
     user.registerTime = date
     user.save()
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
+    sendUserToken(user, 201, res);
   } catch (error) {
     console.error("Error during user registration:", error);
     res.status(500).json({
@@ -44,16 +41,6 @@ exports.registerUser = async (req, res, next) => {
   }
 };
 
-exports.logoutUser = (req, res, next) =>{
-  res.cookie('token', null,{
-    expires: new Date(Date.now()),
-    httpOnly:true
-  }).status(200)
-      .json({
-        success:true,
-        message:"Logedout"
-      })
-}
 
 
 // exports.getUserPhone = async (req, res, next) => {
@@ -112,10 +99,8 @@ exports.loginUser = async (req, res, next) => {
 
     // Additional checks, e.g., password verification, can be added here
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
+    sendUserToken(user,200,res)
+
   } catch (error) {
     console.error("Error during login:", error);
 
@@ -141,6 +126,25 @@ exports.loginUser = async (req, res, next) => {
     }
   }
 };
+// logout-user
+exports.logoutUser = (req, res, next) => {
+  // Clear the 'token' cookie
+  res.cookie('token', null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  // Assuming you have access to the token in the request (e.g., req.user.token)
+  const token = req.user ? req.user.token : null;
+
+  // Send the response after setting the cookie, including the token
+  res.status(200).json({
+    success: true,
+    message: "Logged out",
+    token: token, // Include the token in the response if needed
+  });
+};
+
 exports.getUser = catchAsyncError(async (req, res, next) => {
   const user = await  Client.findById(req.params.id);
   if (!user) {
@@ -154,8 +158,16 @@ exports.getUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
-
+exports.userCall = catchAsyncError(async (req, res, next) => {
+  const {id, recordedTime} = req.body
+  const user = await  Client.findById(id);
+user.callDuration = recordedTime;
+user.save()
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
 
 // getAlluser -  {{base_url}}/api/v1/user/users
 
