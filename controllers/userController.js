@@ -79,6 +79,7 @@ exports.loginUser = async (req, res, next) => {
 
     // Finding the user in the database
     const user = await Client.findOne({ phoneNo });
+    console.log(user);
     const date = new Date().toString()
     user.loginTime = date
     user.save()

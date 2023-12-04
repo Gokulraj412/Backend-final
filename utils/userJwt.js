@@ -17,7 +17,9 @@ const sendUserToken = (user, statusCode, res) => {
             token,
             user: {
                 phoneNo:user.phoneNo, // Adjust this based on your admin object structure
-                token:token// Other admin properties if needed
+       
+                _id:user._id,
+                name:user.name// Other admin properties if needed
             },
         });
 };
