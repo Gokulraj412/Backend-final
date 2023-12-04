@@ -19,7 +19,7 @@ exports.registerUser = async (req, res, next) => {
       // Clientis already registered
       return res.status(409).json({
         success: false,
-        message: 'Client already registered',
+        message: 'User already registered, Please Login',
       });
     }
 
@@ -79,6 +79,13 @@ exports.loginUser = async (req, res, next) => {
 
     // Finding the user in the database
     const user = await Client.findOne({ phoneNo });
+       if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not registered, Please Register',
+      });
+      return;
+    }
     console.log(user);
     const date = new Date().toString()
     user.loginTime = date
@@ -90,13 +97,7 @@ exports.loginUser = async (req, res, next) => {
 
     const clientIp = req.clientIp;
     console.log(clientIp);
-    if (!user) {
-      res.status(404).json({
-        success: false,
-        message: 'User not registered',
-      });
-      return;
-    }
+  
 
     // Additional checks, e.g., password verification, can be added here
 
