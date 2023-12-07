@@ -103,7 +103,7 @@ const astrologerSchema = new mongoose.Schema({
   ],
 
   isActive: {
-    type: Boolean,
+    type: String,
 
   },
   createdAt: {
